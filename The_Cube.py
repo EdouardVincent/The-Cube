@@ -31,7 +31,6 @@ purple_cube = pygame.image.load('C:\\Users\\Isabelle\\Documents\\PYTHON\\The_cub
 square =  pygame.image.load('C:\\Users\\Isabelle\\Documents\\PYTHON\\The_cube\\Images\\square.png')
 background =  pygame.image.load('C:\\Users\\Isabelle\\Documents\\PYTHON\\The_cube\\Images\\bg.png')
 hide_text =  pygame.image.load('C:\\Users\\Isabelle\\Documents\\PYTHON\\The_cube\\Images\\hide_text.png')
-arrival_flag =  pygame.image.load('C:\\Users\\Isabelle\\Documents\\PYTHON\\The_cube\\Images\\flag_arrival.png')
 
 window = pygame.display.set_mode((1284, 648))
 pygame.display.set_icon(red_cube)
