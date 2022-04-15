@@ -3,6 +3,9 @@ from pygame.locals import*
 import sys
 import random
 import time
+from tkinter import *
+from tkinter import ttk
+import sqlite3
 
 #variables#
 
@@ -10,6 +13,10 @@ start = 0
 length_blocks = 2
 loop=21
 nb_movements = 0
+level = 0
+total_time = 0.0
+show_score = 0
+
 
 coordonees_block = {}
 corner_coordonees_cube_x = 0
@@ -27,14 +34,13 @@ fond = pygame.font.Font('freesansbold.ttf',30)
 TextSurf = fond.render('Choose your square', True, (255, 255, 255))
 PressStartSurf = fond.render('Press ESPACE to start', True, (255, 255, 255))
 
-red_cube = pygame.image.load('C:\\Users\\Isabelle\\Documents\\PYTHON\\The_cube\\Images\\red_cube.jpg')
-blue_cube = pygame.image.load('C:\\Users\\Isabelle\\Documents\\PYTHON\\The_cube\\Images\\blue_cube.jpg')
-green_cube =  pygame.image.load('C:\\Users\\Isabelle\\Documents\\PYTHON\\The_cube\\Images\\green_cube.jpg')
-purple_cube = pygame.image.load('C:\\Users\\Isabelle\\Documents\\PYTHON\\The_cube\\Images\\purple_cube.png')
-square =  pygame.image.load('C:\\Users\\Isabelle\\Documents\\PYTHON\\The_cube\\Images\\square.png')
-background =  pygame.image.load('C:\\Users\\Isabelle\\Documents\\PYTHON\\The_cube\\Images\\bg.png')
-hide_text =  pygame.image.load('C:\\Users\\Isabelle\\Documents\\PYTHON\\The_cube\\Images\\hide_text.png')
-arrival_flag =  pygame.image.load('C:\\Users\\Isabelle\\Documents\\PYTHON\\The_cube\\Images\\flag_arrival.png')
+red_cube = pygame.image.load('Images\\red_cube.jpg')
+blue_cube = pygame.image.load('Images\\blue_cube.jpg')
+green_cube =  pygame.image.load('Images\\green_cube.jpg')
+purple_cube = pygame.image.load('Images\\purple_cube.png')
+square =  pygame.image.load('Images\\square.png')
+background =  pygame.image.load('Images\\bg.png')
+hide_text =  pygame.image.load('Images\\hide_text.png')
 
 window = pygame.display.set_mode((1284, 648))
 pygame.display.set_icon(red_cube)
@@ -73,10 +79,10 @@ def generate_random_map (crd,lgth_blocks,loop) :
                 x+=30
                 last_moove = 'right'
 
-            if random_number == 1 and last_moove == 'up' or last_moove == 'left': #add a block on the left
+            if random_number == 1 and last_moove == 'up' or last_moove == 'left' : #add a block on the left
                 x-=30
                 last_moove = 'left'
-            
+
             if random_number == 2 : #add a block up
                 if last_moove == 'right' :
                     x-=30
@@ -90,6 +96,11 @@ def generate_random_map (crd,lgth_blocks,loop) :
             movement.append(last_moove)
 
             crd[i,j] = ((x,y))
+
+def ShowText (text, fond, window, x, y) :
+    TextSurf = fond.render(text,True,(255,255,255))
+    window.blit(TextSurf,(x,y))
+
             
 Cube = cube()
 
@@ -155,7 +166,11 @@ pygame.display.set_icon(red_cube)
 pygame.display.set_caption('The Cube')
 
 while True :
-    window.blit(background,(0,0))
+    try :
+        window.blit(background,(0,0))
+    except pygame.error :
+        show_score = 1
+
     Cube.x = 642
     Cube.y = 618
 
@@ -178,9 +193,11 @@ while True :
                 pygame.quit()
                 sys.exit()
 
-        
-
             if event.type == KEYDOWN :
+                if event.key == K_ESCAPE :
+                    show_score = 1
+                    break
+
                 if event.key == K_SPACE :
                     start = 1
 
@@ -247,8 +264,8 @@ while True :
                   
 
         if movement == [] :
-            #str(seconds)
-            #print("Votre temps est de",seconds*2.5,"secondes")
+            total_time+=seconds*3
+            level+=1
             break
        
         window.blit(PressStartSurf,(0,0))    
@@ -262,7 +279,28 @@ while True :
         
         if start == 1 :
             seconds+=0.001
-   
 
-            
+        if show_score == 1 :
+            break
+
+    
+
+    if show_score == 1 :
+        try :
+            pygame.quit()
+            fenetre_tk = Tk()
+
+            fenetre_tk.title = 'Score'
+
+            label = Label(fenetre_tk, text="Levels Done : %s" %level)
+            label2 = Label(fenetre_tk, text="seconds : %s" %total_time)
+            label.pack()
+            label2.pack()
+
+            button=Button(fenetre_tk, text="Close", command=fenetre_tk.quit)
+            button.pack()
+
+            fenetre_tk.mainloop()
         
+        except pygame.error :
+            print("Program s end")
