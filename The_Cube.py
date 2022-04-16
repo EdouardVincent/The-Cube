@@ -16,7 +16,9 @@ nb_movements = 0
 level = 0
 total_time = 0.0
 show_score = 0
-
+tutorial = 0
+menu = 1
+game = 0
 
 coordonees_block = {}
 corner_coordonees_cube_x = 0
@@ -41,6 +43,12 @@ purple_cube = pygame.image.load('Images\\purple_cube.png')
 square =  pygame.image.load('Images\\square.png')
 background =  pygame.image.load('Images\\bg.png')
 hide_text =  pygame.image.load('Images\\hide_text.png')
+menu_image = pygame.image.load('Images\\Menu.png')
+button_leave_image = pygame.image.load('Images\\button_leave.png')
+button_play_image = pygame.image.load('Images\\button_play.png')
+button_tutorial_image = pygame.image.load('Images\\button_tutorial.png')
+tutorial_image = pygame.image.load('Images\\Tutorial.png')
+button_play_now_image = pygame.image.load('Images\\button_play_now.png')
 
 window = pygame.display.set_mode((1284, 648))
 pygame.display.set_icon(red_cube)
@@ -101,7 +109,58 @@ def ShowText (text, fond, window, x, y) :
     TextSurf = fond.render(text,True,(255,255,255))
     window.blit(TextSurf,(x,y))
 
+button_leave_rect = button_leave_image.get_rect(topleft = (500,500))
+button_play_rect = button_play_image.get_rect(topleft = (500,300))
+button_tutorial_rect = button_tutorial_image.get_rect(topleft = (500,400))
+        
+while menu :
+    for event in pygame.event.get() :
+
+        mouse_position = pygame.mouse.get_pos() 
+
+        if event.type == QUIT :
+            pygame.quit()
+            sys.exit()
+        if event.type == MOUSEBUTTONDOWN :
+            if button_leave_rect.collidepoint(mouse_position) :
+                pygame.quit()
+                sys.exit()
+
+            if button_tutorial_rect.collidepoint(mouse_position) :
+                tutorial = 1
+                menu = 0
+
+            if button_play_rect.collidepoint(mouse_position) :
+                choose_square = 1
+                menu = 0
             
+    window.blit(menu_image,(0,0))
+    window.blit(button_leave_image,(500,500))
+    window.blit(button_tutorial_image,(500,400))
+    window.blit(button_play_image,(500,300))
+    
+    pygame.display.flip()
+
+if tutorial == 1 :
+    button_play_now_rect = button_play_now_image.get_rect(topleft = (300,200))
+    while tutorial :
+        for event in pygame.event.get() :
+
+            mouse_position = pygame.mouse.get_pos()   
+
+            if event.type == QUIT :
+                pygame.quit()
+                sys.exit()
+
+            if event.type == MOUSEBUTTONDOWN :
+                if button_play_now_rect.collidepoint(mouse_position) :
+                    tutorial = 0
+                    choose_square = 1
+
+            window.blit(tutorial_image,(0,0))
+            window.blit(button_play_now_image,(300,200))
+            pygame.display.flip()
+
 Cube = cube()
 
 Cube1 = cube()
@@ -118,7 +177,7 @@ red_cube_rect = red_cube.get_rect(topleft = (Cube1.x, Cube1.y))
 blue_cube_rect = blue_cube.get_rect(topleft = (Cube2.x, Cube2.y))
 green_cube_rect  = green_cube.get_rect(topleft = (Cube3.x, Cube3.y))
 
-while True :
+while choose_square :
 
     for event in pygame.event.get () :
 
@@ -137,18 +196,24 @@ while True :
             window.blit(square,(Cube1.x-2.5, Cube1.y-2.5))
             if event.type == MOUSEBUTTONDOWN :
                 Cube.image = red_cube
+                choose_square = 0
+                game = 1
                 pygame.quit()
             
         if blue_cube_rect.collidepoint(mouse_position) :
             window.blit(square,(Cube2.x-2.5, Cube2.y-2.5))
             if event.type == MOUSEBUTTONDOWN :
                 Cube.image = blue_cube
+                choose_square = 0
+                game = 1
                 pygame.quit()
                 
         if green_cube_rect.collidepoint(mouse_position) :
             window.blit(square,(Cube3.x-2.5, Cube3.y-2.5))
             if event.type == MOUSEBUTTONDOWN :
                 Cube.image = green_cube
+                choose_square = 0
+                game = 1
                 pygame.quit()
                 
         
@@ -165,7 +230,7 @@ window = pygame.display.set_mode((1286, 648))
 pygame.display.set_icon(red_cube)
 pygame.display.set_caption('The Cube')
 
-while True :
+while game :
     try :
         window.blit(background,(0,0))
     except pygame.error :
@@ -173,6 +238,9 @@ while True :
 
     Cube.x = 642
     Cube.y = 618
+
+    corner_coordonees_cube_x = Cube.x
+    corner_coordonees_cube_y = Cube.y
 
     generate_random_map(coordonees_block, length_blocks, loop)
     
@@ -286,21 +354,26 @@ while True :
     
 
     if show_score == 1 :
-        try :
-            pygame.quit()
-            fenetre_tk = Tk()
+        total_time = str(total_time)
+        total_time.split(".")
+        total_time = str(total_time[0]) + str(total_time[1])
 
-            fenetre_tk.title = 'Score'
+        pygame.quit()
+        fenetre_tk = Tk()
 
-            label = Label(fenetre_tk, text="Levels Done : %s" %level)
-            label2 = Label(fenetre_tk, text="seconds : %s" %total_time)
-            label.pack()
-            label2.pack()
+        fenetre_tk.title = 'Score'
 
-            button=Button(fenetre_tk, text="Close", command=fenetre_tk.quit)
-            button.pack()
+        label = Label(fenetre_tk, text="Levels Done : %s" %level)
+        label2 = Label(fenetre_tk, text="Time (seconds) : %s" %total_time)
+        label.pack()
+        label2.pack()
 
-            fenetre_tk.mainloop()
+        button=Button(fenetre_tk, text="Close", command=fenetre_tk.quit)
+        button.pack()
+
+        fenetre_tk.mainloop()
         
-        except pygame.error :
-            print("Program s end")
+        
+
+
+
