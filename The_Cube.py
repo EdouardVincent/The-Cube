@@ -53,12 +53,6 @@ tutorial_image = pygame.image.load('Images\\Tutorial.png')
 
 #Images
 
-#Song#
-
-game_song = pygame.mixer.Sound('Songs\\game_song.wav')
-
-#Song#
-
 window = pygame.display.set_mode((1284, 648))
 pygame.display.set_icon(red_cube)
 pygame.display.set_caption('The Cube')
