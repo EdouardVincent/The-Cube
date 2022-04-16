@@ -36,6 +36,8 @@ fond = pygame.font.Font('freesansbold.ttf',30)
 TextSurf = fond.render('Choose your square', True, (255, 255, 255))
 PressStartSurf = fond.render('Press ESPACE to start', True, (255, 255, 255))
 
+#Images#
+
 red_cube = pygame.image.load('Images\\red_cube.jpg')
 blue_cube = pygame.image.load('Images\\blue_cube.jpg')
 green_cube =  pygame.image.load('Images\\green_cube.jpg')
@@ -48,7 +50,14 @@ button_leave_image = pygame.image.load('Images\\button_leave.png')
 button_play_image = pygame.image.load('Images\\button_play.png')
 button_tutorial_image = pygame.image.load('Images\\button_tutorial.png')
 tutorial_image = pygame.image.load('Images\\Tutorial.png')
-button_play_now_image = pygame.image.load('Images\\button_play_now.png')
+
+#Images
+
+#Song#
+
+game_song = pygame.mixer.Sound('Songs\\game_song.wav')
+
+#Song#
 
 window = pygame.display.set_mode((1284, 648))
 pygame.display.set_icon(red_cube)
@@ -142,7 +151,7 @@ while menu :
     pygame.display.flip()
 
 if tutorial == 1 :
-    button_play_now_rect = button_play_now_image.get_rect(topleft = (300,200))
+    button_play_rect = button_play_image.get_rect(topleft = (200,200))
     while tutorial :
         for event in pygame.event.get() :
 
@@ -153,12 +162,12 @@ if tutorial == 1 :
                 sys.exit()
 
             if event.type == MOUSEBUTTONDOWN :
-                if button_play_now_rect.collidepoint(mouse_position) :
+                if button_play_rect.collidepoint(mouse_position) :
                     tutorial = 0
                     choose_square = 1
 
             window.blit(tutorial_image,(0,0))
-            window.blit(button_play_now_image,(300,200))
+            window.blit(button_play_image,(200,200))
             pygame.display.flip()
 
 Cube = cube()
@@ -231,6 +240,7 @@ pygame.display.set_icon(red_cube)
 pygame.display.set_caption('The Cube')
 
 while game :
+
     try :
         window.blit(background,(0,0))
     except pygame.error :
@@ -372,6 +382,8 @@ while game :
         button.pack()
 
         fenetre_tk.mainloop()
+        
+
         
         
 
