@@ -5,7 +5,6 @@ import random
 import time
 from tkinter import *
 from tkinter import ttk
-import sqlite3
 
 #variables#
 
