@@ -20,7 +20,8 @@ tutorial = 0
 menu = 1
 game = 0
 a=0
-last_moove = ''
+moove = ''
+lose = 0
 
 coordonees_block = {}
 corner_coordonees_cube_x = 0
@@ -33,7 +34,6 @@ movement = []
 pygame.init()
 
 fond = pygame.font.Font('freesansbold.ttf',30)
-
 
 TextSurf = fond.render('Choose your square', True, (255, 255, 255))
 PressStartSurf = fond.render('Press ESPACE to start', True, (255, 255, 255))
@@ -51,6 +51,9 @@ button_leave_image = pygame.image.load('Images\\button_leave.png')
 button_play_image = pygame.image.load('Images\\button_play.png')
 button_tutorial_image = pygame.image.load('Images\\button_tutorial.png')
 tutorial_image = pygame.image.load('Images\\Tutorial.png')
+Lost_animation = pygame.image.load('Images\\Lost_animation.png')
+yes_button_image = pygame.image.load('Images\\yes_button.png')
+no_button_image = pygame.image.load('Images\\no_button.png')
 
 #Images
 
@@ -125,6 +128,7 @@ while menu :
         if event.type == QUIT :
             pygame.quit()
             sys.exit()
+
         if event.type == MOUSEBUTTONDOWN :
             if button_leave_rect.collidepoint(mouse_position) :
                 pygame.quit()
@@ -326,10 +330,15 @@ blocks = [block1,
     block41,
     block42]
 
+button_no_rect = no_button_image.get_rect(topleft = (755, 300))
+button_yes_rect = yes_button_image.get_rect(topleft = (370, 300))
+
 for x in range(len(blocks)) :
     blocks[x].image = purple_cube
     
 while game :
+
+    movement = []
 
     try :
         window.blit(background,(0,0))
@@ -343,7 +352,7 @@ while game :
     corner_coordonees_cube_y = Cube.y
 
     generate_random_map(coordonees_block, length_blocks, loop)
-    a=0
+    
 
     for i in range(loop) :
         for j in range(length_blocks) :
@@ -354,13 +363,29 @@ while game :
             blocks[a].y = coordonees_block[i,j][1]
         
     seconds = 0
+    a=0
+    start_level = 1
             
-    while True :
+    while start_level :
 
         for event in pygame.event.get() :
             if event.type == QUIT :
                 pygame.quit()
                 sys.exit()
+
+            mouse_position = pygame.mouse.get_pos()   
+
+            if event.type == MOUSEBUTTONDOWN and lose == 1 :
+
+                if button_no_rect.collidepoint(mouse_position) :    
+                    pygame.quit()
+                    sys.exit()     
+
+                if button_yes_rect.collidepoint(mouse_position):    
+                    level = 0
+                    start = 0
+                    lose = 0
+                    start_level = 0                            
 
             if event.type == KEYDOWN :
                 if event.key == K_ESCAPE :
@@ -370,7 +395,7 @@ while game :
                 if event.key == K_SPACE :
                     start = 1
 
-                if event.key == K_LEFT and start == 1 :
+                if event.key == K_LEFT and start == 1 and lose == 0:
                     nb_movements = 0
                     for x in range(len(movement)) :
                         if movement[x] == 'left' :
@@ -380,10 +405,13 @@ while game :
                             break
 
                     if nb_movements > 0 :
-                        last_moove = 'left'
+                        moove = 'left'
+
+                    if moove == 'up' or moove == 'right' :
+                        lose = 1
 
 
-                if event.key == K_RIGHT and start == 1 :
+                if event.key == K_RIGHT and start == 1 and lose == 0 :
                     nb_movements = 0
                     for x in range(len(movement)) :
                         if movement[x] == 'right' :
@@ -393,10 +421,14 @@ while game :
                             break
 
                     if nb_movements > 0 :
-                        last_moove = 'right'
+                        moove = 'right'
+
+                    if moove == 'up' or moove == 'left' :
+                        lose = 1
 
 
-                if event.key == K_UP and start == 1 :
+                if event.key == K_UP and start == 1 and lose == 0 :
+
                     nb_movements = 0
                     for x in range(len(movement)) :
                         if movement[x] == 'up' :
@@ -406,20 +438,22 @@ while game :
                             break
 
                     if nb_movements > 0 :
-                        last_moove = 'up'
-
-                      
-        if last_moove == 'up' and nb_movements > 0 :
+                        moove = 'up'
+                    
+                    if moove == 'right' or moove == 'left' :
+                        lose = 1
+                        
+        if moove == 'up' and nb_movements > 0 :
             nb_movements-=1
             movement.remove('up')
             Cube.moove_up()
 
-        if last_moove == 'right' and nb_movements > 0 :
+        if moove == 'right' and nb_movements > 0 :
             nb_movements-=1
             movement.remove('right')
             Cube.moove_right()
 
-        if last_moove == 'left' and nb_movements > 0 :
+        if moove == 'left' and nb_movements > 0 :
             nb_movements-=1
             movement.remove('left')
             Cube.moove_left()
@@ -431,8 +465,6 @@ while game :
 
         window.blit(background,(0,0))
 
-        window.blit(purple_cube,(block18.x, block18.y))
-
         if start == 0 :
             window.blit(PressStartSurf,(0,0))
 
@@ -442,14 +474,23 @@ while game :
             blocks[x].display()
 
         Cube.display()
+
+        if lose == 1 :
+            window.blit(background,(0,0))
+            window.blit(Lost_animation,(350,200))
+            window.blit(yes_button_image,(370,300))
+            window.blit(no_button_image,(755,300))
+
         pygame.display.flip()
-        time.sleep(0.01)
+        time.sleep(0.008)
         
         if start == 1 :
-            seconds+=0.01
+            seconds+=0.008
 
         if show_score == 1 :
             break
+
+    
 
     if show_score == 1 :
         total_time = str(total_time)
@@ -470,3 +511,4 @@ while game :
         button.pack()
 
         fenetre_tk.mainloop()
+        
