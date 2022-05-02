@@ -31,6 +31,7 @@ movement = []
 
 #variables#
 
+
 pygame.init()
 
 fond = pygame.font.Font('freesansbold.ttf',30)
