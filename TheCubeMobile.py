@@ -350,6 +350,7 @@ while game :
                         game = 0
                         pygame.quit()
                         sys.exit()
+                        start_ticks_total_time = pygame.time.get_ticks()
 
             if button_yes_rect.collidepoint(mouse_position) :
                 if lose == 1 or lose_with_time == 1 :
