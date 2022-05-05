@@ -38,7 +38,7 @@ pygame.init()
 
 fond = pygame.font.Font('freesansbold.ttf',30)
 
-TextSurf = fond.render('Chose your square', True, (255, 255, 255))
+TextSurf = fond.render('Choose your square', True, (255, 255, 255))
 
 #Images#
 
