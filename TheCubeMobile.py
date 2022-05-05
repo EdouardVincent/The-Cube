@@ -357,7 +357,8 @@ while game :
                         level = 0
                         lose = 0
                         lose_with_time = 0
-                        start_level = 0                             
+                        start_level = 0  
+                        start_ticks_total_time = pygame.time.get_ticks()
              
             if event.type == MOUSEBUTTONDOWN :
                 if arrow_left_rect.collidepoint(mouse_position) and lose == 0:
